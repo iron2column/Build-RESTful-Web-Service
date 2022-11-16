@@ -61,5 +61,25 @@ public class Greeting {
 `GreetingController` 来处理 `GET` 请求`/greeting`，返回一个 `Greeting` 类的实例：
 
 ```java
+
+@RestController
+public class GreetingController {
+    // 计数器（原子性）
+    private final AtomicLong counter = new AtomicLong();
+
+    @GetMapping("/greeting")
+    public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return new Greeting(counter.incrementAndGet(), String.format("Hello, %s", name));
+    }
+}
 ```
 
+上面的 Controller 虽然简单，但隐含了大量信息：
+
+- **`@GetMapping` 注解**：此注解确保了 HTTP GET 请求 `/greeting` 被映射到 `greeting()` 方法上。
+
+  > 还有更多同类型注解用于其他 HTTP 动作，如 `PostMapping` => `POST`。
+  >
+  > `@RequestMapping` 注解是它们从此注解派生出来的，因此 `@RequestMapping(method=GET)`
+
+- 
